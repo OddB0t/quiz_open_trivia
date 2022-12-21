@@ -1,0 +1,40 @@
+import requests
+
+# prompt user for nickname
+nickname = input("Enter your nickname: ")
+
+# initialize variables
+score = 0
+questions = []
+
+# retrieve quiz questions from OpenTrivia API
+response = requests.get("https://opentdb.com/api.php?amount=10&type=multiple")
+data = response.json()
+
+# extract quiz questions from API response
+for question in data["results"]:
+    questions.append(question)
+
+# display quiz questions to user and collect answers
+for i in range(len(questions)):
+    q = questions[i]["question"]
+    print(f"Question {i+1}: {q}")
+    print("Options:")
+    for j in range(len(questions[i]["incorrect_answers"])):
+        print(f"{j+1}: {questions[i]["incorrect_answers"][j]}")
+    print(f"{j+2}: {questions[i]["correct_answer"]}")
+    answer = input("Enter your answer: ")
+    if answer == questions[i]["correct_answer"]:
+        score += 1
+
+# display score to user
+print(f"Your score: {score}/10")
+
+# ask user if they want to play again
+play_again = input("Would you like to play again? (y/n)")
+if play_again == "y":
+    # run quiz again
+    pass
+else:
+    # exit quiz
+    exit()
